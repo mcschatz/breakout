@@ -17,7 +17,7 @@ describe('balls', function () {
 
   it('should have a Y-coordinate', function(){
     let ball = new Ball();
-    assert.equal(ball.y, 360);
+    assert.equal(ball.y, 930);
   });
 
   it('should have a radius', function(){
