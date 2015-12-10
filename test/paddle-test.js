@@ -1,9 +1,15 @@
 const chai = require('chai');
 const assert = chai.assert;
 
+const Game = require('../lib/game.js');
 const Paddle = require('../lib/paddle.js');
 
+
 describe('paddle', function () {
+
+  beforeEach(function() {
+    this.game = new Game();
+  });
 
   it('should instatiate a new paddle', function () {
     let paddle = new Paddle();
