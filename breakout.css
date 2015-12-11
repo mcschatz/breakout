@@ -13,7 +13,6 @@ body {
   text-transform: uppercase;
   font-weight: 200;
   letter-spacing: 2px;
-
 }
 
 #canvas {
@@ -28,6 +27,4 @@ body {
   margin-right: auto;
   display: block;
 }
-
-
 
