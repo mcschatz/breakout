@@ -7,6 +7,16 @@ describe('start', function () {
 
   it('should instatiate a new start', function () {
     let start = new Start();
-    assert.isObject(ball);
+    assert.isObject(start);
+  });
+
+  it('should have an annoying theme song', function () {
+    let start = new Start();
+    assert.ok(start.themeSound);
+  });
+
+  it('should have an annoying theme song', function () {
+    let start = new Start();
+    assert.ok(start.themeSound);
   });
 });
