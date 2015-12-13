@@ -12,22 +12,27 @@ describe('paddle', function () {
   });
 
   it('should instatiate a new paddle', function () {
-    let paddle = new Paddle();
+    let paddle = new Paddle(this.game);
     assert.isObject(paddle);
   });
 
-  it('should have a height', function () {
-    let paddle = new Paddle();
-    assert.equal(paddle.height, 0);
+  it('should have a width', function () {
+    let paddle = new Paddle(this.game);
+    assert.equal(paddle.size.x, 100);
   });
 
-  it('should have a width', function(){
-    let paddle = new Paddle();
-    assert.equal(paddle.width, 0);
+  it('should have a height', function(){
+    let paddle = new Paddle(this.game);
+    assert.equal(paddle.size.y, 15);
   });
 
-  it('should have an x-coordinate', function(){
-    let paddle = new Paddle();
-    assert.equal(paddle.x, 0);
+  it('should have an x-coordinate center', function(){
+    let paddle = new Paddle(this.game);
+    assert.equal(paddle.center.x, 341);
+  });
+
+  it('should have an y-coordinate center', function(){
+    let paddle = new Paddle(this.game);
+    assert.equal(paddle.center.y, 505);
   });
 });
