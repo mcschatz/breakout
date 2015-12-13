@@ -12,12 +12,12 @@ describe('balls', function () {
 
   it('should have a X-coordinate', function () {
     let ball = new Ball();
-    assert.equal(ball.x, 320);
+    assert.equal(ball.x, 391);
   });
 
   it('should have a Y-coordinate', function(){
     let ball = new Ball();
-    assert.equal(ball.y, 930);
+    assert.equal(ball.y, 490);
   });
 
   it('should have a radius', function(){
