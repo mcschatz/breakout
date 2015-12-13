@@ -14,9 +14,4 @@ describe('start', function () {
     let start = new Start();
     assert.ok(start.themeSound);
   });
-
-  it('should have an annoying theme song', function () {
-    let start = new Start();
-    assert.ok(start.themeSound);
-  });
 });
