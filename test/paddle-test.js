@@ -26,13 +26,13 @@ describe('paddle', function () {
     assert.equal(paddle.size.y, 15);
   });
 
-  it('should have an x-coordinate center', function(){
+  it('should have an x-coordinate position', function(){
     let paddle = new Paddle(this.game);
-    assert.equal(paddle.center.x, 341);
+    assert.equal(paddle.position.x, 341);
   });
 
-  it('should have an y-coordinate center', function(){
+  it('should have an y-coordinate position', function(){
     let paddle = new Paddle(this.game);
-    assert.equal(paddle.center.y, 505);
+    assert.equal(paddle.position.y, 505);
   });
 });
