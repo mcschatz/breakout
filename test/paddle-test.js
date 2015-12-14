@@ -18,7 +18,7 @@ describe('paddle', function () {
 
   it('should have a width', function () {
     let paddle = new Paddle(this.game);
-    assert.equal(paddle.size.x, 100);
+    assert.equal(paddle.size.x, 120);
   });
 
   it('should have a height', function(){
