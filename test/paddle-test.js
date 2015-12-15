@@ -28,7 +28,7 @@ describe('paddle', function () {
 
   it('should have an x-coordinate position', function(){
     let paddle = new Paddle(this.game);
-    assert.equal(paddle.position.x, 331);
+    assert.equal(paddle.position.x, 316);
   });
 
   it('should have an y-coordinate position', function(){
