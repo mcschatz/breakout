@@ -423,7 +423,7 @@
 	  this.game = game;
 	  this.size = { x: 150, y: 15 };
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
-	  this.position = { x: this.game.size.x / 2 - 60, y: this.game.size.y - 15 };
+	  this.position = { x: this.game.size.x / 2 - 75, y: this.game.size.y - 15 };
 	  this.keyboarder = new Keyboarder();
 	};
 
@@ -8691,7 +8691,7 @@
 
 	  it('should have an x-coordinate position', function () {
 	    var paddle = new Paddle(this.game);
-	    assert.equal(paddle.position.x, 331);
+	    assert.equal(paddle.position.x, 316);
 	  });
 
 	  it('should have an y-coordinate position', function () {
