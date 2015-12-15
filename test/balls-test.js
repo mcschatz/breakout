@@ -22,7 +22,7 @@ describe('balls', function () {
 
   it('should have a Y-coordinate', function(){
     let ball = new Ball(this.game);
-    assert.equal(ball.y, 490);
+    assert.equal(ball.y, 495);
   });
 
   it('should have a radius', function(){
