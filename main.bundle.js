@@ -134,9 +134,9 @@
 	'use strict';
 
 	var Ball = __webpack_require__(3);
-	var Paddle = __webpack_require__(5);
-	var Brick = __webpack_require__(6);
-	var Colors = __webpack_require__(7);
+	var Paddle = __webpack_require__(6);
+	var Brick = __webpack_require__(7);
+	var Colors = __webpack_require__(8);
 	var Canvas = __webpack_require__(4);
 
 	var Game = function Game() {
@@ -149,11 +149,6 @@
 	  this.bodies = bricks.concat(createBall(this, paddle, bricks)).concat(paddle);
 	  this.score = 0;
 	  this.lives = 3;
-	  this.paddleSound = document.getElementById("paddle-sound");
-	  this.topSound = document.getElementById("top-sound");
-	  this.wallSound = document.getElementById("wall-sound");
-	  this.deathSound = document.getElementById("death-sound");
-	  this.brickSound = document.getElementById("brick-sound");
 
 	  var self = this;
 	  var tick = function tick() {
@@ -221,9 +216,10 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var Canvas = __webpack_require__(4);
+	var Sounds = __webpack_require__(5);
 
 	var Ball = function Ball(game, paddle, bricks) {
 	  var canvas = new Canvas().canvas;
@@ -231,13 +227,14 @@
 	  this.paddle = paddle;
 	  this.startAngle = 0;
 	  this.x = canvas.width / 2;
-	  this.y = canvas.height - 30;
+	  this.y = canvas.height - 25;
 	  this.canvasHeightOffset = 8;
 	  this.radius = 10;
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
 	  this.bricks = bricks;
 	  this.dx = 0;
-	  this.dy = 7;
+	  this.dy = 8;
+	  this.sounds = new Sounds();
 	};
 
 	Ball.prototype = {
@@ -250,20 +247,13 @@
 	    canvas.closePath();
 	  },
 
-	  reset: function reset() {
-	    this.startAngle = 0;
-	    this.x = canvas.width / 2;
-	    this.y = canvas.height - 30;
-	    this.dy = -this.dy;
-	  },
-
 	  setLeftSlope: function setLeftSlope() {
-	    this.dx = -9;
+	    this.dx = -10;
 	    this.dy = -this.dy;
 	  },
 
 	  setLeftCenterSlope: function setLeftCenterSlope() {
-	    this.dx = -8;
+	    this.dx = -9;
 	    this.dy = -this.dy;
 	  },
 
@@ -273,93 +263,93 @@
 	  },
 
 	  setRightCenterSlope: function setRightCenterSlope() {
-	    this.dx = 8;
-	    this.dy = -this.dy;
-	  },
-
-	  setRightSlope: function setRightSlope() {
 	    this.dx = 9;
 	    this.dy = -this.dy;
 	  },
 
+	  setRightSlope: function setRightSlope() {
+	    this.dx = 10;
+	    this.dy = -this.dy;
+	  },
+
 	  setPaddleSound: function setPaddleSound() {
-	    this.game.paddleSound.load();
-	    this.game.paddleSound.play();
+	    this.sounds.paddleSound.load();
+	    this.sounds.paddleSound.play();
 	  },
 
 	  setWallSound: function setWallSound() {
-	    this.game.wallSound.load();
-	    this.game.wallSound.play();
+	    this.sounds.wallSound.load();
+	    this.sounds.wallSound.play();
 	  },
 
 	  setTopSound: function setTopSound() {
-	    this.game.topSound.load();
-	    this.game.topSound.play();
+	    this.sounds.topSound.load();
+	    this.sounds.topSound.play();
 	  },
 
 	  setDeathSound: function setDeathSound() {
-	    this.game.deathSound.load();
-	    this.game.deathSound.play();
+	    this.sounds.deathSound.load();
+	    this.sounds.deathSound.play();
+	  },
+
+	  setBrickSound: function setBrickSound() {
+	    this.sounds.brickSound.load();
+	    this.sounds.brickSound.play();
 	  },
 
 	  move: function move() {
 	    this.collisionDetectionBricks();
+	    this.collisionDetectionWalls();
 
-	    if (this.x + this.dx > this.gameSize.x - this.radius || this.x + this.dx < this.radius) {
-	      this.setWallSound();
-	      this.dx = -this.dx;
+	    if (this.y + this.dy > this.gameSize.y - this.radius * 2) {
+	      this.collisionDetectionPaddle();
 	    }
 
-	    if (this.y - this.canvasHeightOffset + this.dy < this.radius) {
-	      this.setTopSound();
-	      this.dy = -this.dy;
-	    }
-
-	    //Drops Below Padde
-	    else if (this.y + this.dy > this.gameSize.y - this.radius * 2) {
-
-	        //Left Hit - between -4 and 29 pixels
-	        if (this.x > this.paddle.position.x - 4 && this.x < this.paddle.position.x + 29) {
-
-	          this.setPaddleSound();
-	          this.setLeftSlope();
-
-	          // Left Center Hit - between 30 and 59 pixels
-	        } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 30 && this.x < this.paddle.position.x + 59) {
-
-	            this.setPaddleSound();
-	            this.setLeftCenterSlope();
-
-	            // Center Hit - between 60 and 89 pixels
-	          } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 60 && this.x < this.paddle.position.x + 89) {
-
-	              this.setPaddleSound();
-	              this.setCenterSlope();
-
-	              // Right Center Hit - between 90 and 119 pixels
-	            } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 90 && this.x < this.paddle.position.x + 119) {
-
-	                this.setPaddleSound();
-	                this.setRightCenterSlope();
-
-	                // Right Hit - between 120 and 154 pixels
-	              } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 120 && this.x < this.paddle.position.x + 154) {
-
-	                  this.setPaddleSound();
-	                  this.setRightSlope();
-	                } else {
-	                  this.game.lives -= 1;
-	                  if (this.game.lives > 0) {
-	                    this.reset();
-	                  } else {
-	                    alert("You Fell into the Wall - GAME OVER");
-	                    this.setDeathSound();
-	                    document.location.reload();
-	                  }
-	                }
-	      }
 	    this.x += this.dx;
 	    this.y += this.dy;
+	  },
+
+	  collisionDetectionPaddle: function collisionDetectionPaddle() {
+	    if (this.x >= this.paddle.position.x - 4 && this.x <= this.paddle.position.x + 29) {
+	      this.setPaddleSound();
+	      this.setLeftSlope();
+	    }
+	    if (this.x >= this.paddle.position.x + 30 && this.x <= this.paddle.position.x + 59) {
+	      this.setPaddleSound();
+	      this.setLeftCenterSlope();
+	    }
+	    if (this.x >= this.paddle.position.x + 60 && this.x <= this.paddle.position.x + 89) {
+	      this.setPaddleSound();
+	      this.setCenterSlope();
+	    }
+	    if (this.x >= this.paddle.position.x + 90 && this.x <= this.paddle.position.x + 119) {
+	      this.setPaddleSound();
+	      this.setRightCenterSlope();
+	    }
+	    if (this.x >= this.paddle.position.x + 120 && this.x <= this.paddle.position.x + 154) {
+	      this.setPaddleSound();
+	      this.setRightSlope();
+	    }
+	    if (this.x < this.paddle.position.x - 4 || this.x > this.paddle.position.x + 154) {
+	      this.updateGame();
+	    }
+	  },
+
+	  updateGame: function updateGame() {
+	    this.game.lives -= 1;
+	    var lives = this.game.lives;
+
+	    if (lives > 0) {
+	      this.startAngle = 0;
+	      this.x = canvas.width / 2;
+	      this.y = canvas.height - 25;
+	      this.dy = -this.dy;
+	      this.paddle.position = { x: this.game.size.x / 2 - 75, y: this.game.size.y - 15 };
+	    } else {
+	      alert("GAME OVER");
+	      this.setDeathSound();
+	      document.location.reload();
+	    }
 	  },
 
 	  collisionDetectionBricks: function collisionDetectionBricks() {
@@ -369,8 +359,7 @@
 
 	    for (var i = 0; i < self.bricks.length; i++) {
 	      if (self.x > self.bricks[i].position.x && self.x < self.bricks[i].position.x + brickWidth && self.y - self.radius < self.bricks[i].position.y + brickHeight && self.y + self.radius > self.bricks[i].position.y - brickHeight) {
-	        this.game.brickSound.load();
-	        this.game.brickSound.play();
+	        this.setBrickSound();
 	        this.dy = -this.dy;
 	        self.bricks[i].status = 0;
 	        self.bricks.splice(i, 1);
@@ -378,6 +367,20 @@
 	      }
 	    }
 	    return this.dy;
+	  },
+
+	  collisionDetectionWalls: function collisionDetectionWalls() {
+	    var self = this;
+
+	    if (self.x + self.dx > self.gameSize.x - self.radius || self.x + self.dx < self.radius) {
+	      self.setWallSound();
+	      self.dx = -self.dx;
+	    }
+
+	    if (self.y - self.canvasHeightOffset + self.dy < self.radius) {
+	      self.setTopSound();
+	      self.dy = -self.dy;
+	    }
 	  }
 	};
 
@@ -406,6 +409,22 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var Sounds = function Sounds() {
+	  this.paddleSound = document.getElementById("paddle-sound");
+	  this.topSound = document.getElementById("top-sound");
+	  this.wallSound = document.getElementById("wall-sound");
+	  this.deathSound = document.getElementById("death-sound");
+	  this.brickSound = document.getElementById("bricks-sound");
+	};
+
+	module.exports = Sounds;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -459,7 +478,7 @@
 	module.exports = Paddle;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -487,7 +506,7 @@
 	module.exports = Brick;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
