@@ -2,8 +2,14 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const Start = require('../lib/start');
+const Sounds = require('../lib/sounds');
+
 
 describe('start', function () {
+
+  beforeEach(function() {
+    this.sounds = new Sounds();
+  });
 
   it('should instatiate a new start', function () {
     let start = new Start();
@@ -12,6 +18,6 @@ describe('start', function () {
 
   it('should have an annoying theme song', function () {
     let start = new Start();
-    assert.ok(start.themeSound);
+    assert.ok(this.sounds.themeSound);
   });
 });
