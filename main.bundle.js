@@ -225,9 +225,6 @@
 
 	var Canvas = __webpack_require__(4);
 
-	var dx = 5;
-	var dy = -5;
-
 	var Ball = function Ball(game, paddle, bricks) {
 	  var canvas = new Canvas().canvas;
 	  this.game = game;
@@ -239,6 +236,8 @@
 	  this.radius = 10;
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
 	  this.bricks = bricks;
+	  this.dx = 0;
+	  this.dy = 7;
 	};
 
 	Ball.prototype = {
@@ -255,42 +254,112 @@
 	    this.startAngle = 0;
 	    this.x = canvas.width / 2;
 	    this.y = canvas.height - 30;
-	    dy = -dy;
+	    this.dy = -this.dy;
+	  },
+
+	  setLeftSlope: function setLeftSlope() {
+	    this.dx = -9;
+	    this.dy = -this.dy;
+	  },
+
+	  setLeftCenterSlope: function setLeftCenterSlope() {
+	    this.dx = -8;
+	    this.dy = -this.dy;
+	  },
+
+	  setCenterSlope: function setCenterSlope() {
+	    this.dx = 0;
+	    this.dy = -this.dy;
+	  },
+
+	  setRightCenterSlope: function setRightCenterSlope() {
+	    this.dx = 8;
+	    this.dy = -this.dy;
+	  },
+
+	  setRightSlope: function setRightSlope() {
+	    this.dx = 9;
+	    this.dy = -this.dy;
+	  },
+
+	  setPaddleSound: function setPaddleSound() {
+	    this.game.paddleSound.load();
+	    this.game.paddleSound.play();
+	  },
+
+	  setWallSound: function setWallSound() {
+	    this.game.wallSound.load();
+	    this.game.wallSound.play();
+	  },
+
+	  setTopSound: function setTopSound() {
+	    this.game.topSound.load();
+	    this.game.topSound.play();
+	  },
+
+	  setDeathSound: function setDeathSound() {
+	    this.game.deathSound.load();
+	    this.game.deathSound.play();
 	  },
 
 	  move: function move() {
 	    this.collisionDetectionBricks();
 
-	    if (this.x + dx > this.gameSize.x - this.radius || this.x + dx < this.radius) {
-	      this.game.wallSound.load();
-	      this.game.wallSound.play();
-	      dx = -dx;
+	    if (this.x + this.dx > this.gameSize.x - this.radius || this.x + this.dx < this.radius) {
+	      this.setWallSound();
+	      this.dx = -this.dx;
 	    }
 
-	    if (this.y - this.canvasHeightOffset + dy < this.radius) {
-	      this.game.topSound.load();
-	      this.game.topSound.play();
-	      dy = -dy;
-	    } else if (this.y + dy > this.gameSize.y - this.radius * 2) {
-	      if (this.x > this.paddle.position.x && this.x < this.paddle.position.x + this.paddle.size.x) {
-	        this.game.paddleSound.load();
-	        this.game.paddleSound.play();
-	        dy = -dy;
-	      } else {
+	    if (this.y - this.canvasHeightOffset + this.dy < this.radius) {
+	      this.setTopSound();
+	      this.dy = -this.dy;
+	    }
 
-	        this.game.lives -= 1;
-	        if (this.game.lives > 0) {
-	          this.reset();
-	        } else {
-	          alert("You Fell into the Wall - GAME OVER");
-	          this.game.deathSound.load();
-	          this.game.deathSound.play();
-	          document.location.reload();
-	        }
+	    //Drops Below Padde
+	    else if (this.y + this.dy > this.gameSize.y - this.radius * 2) {
+
+	        //Left Hit - between -4 and 29 pixels
+	        if (this.x > this.paddle.position.x - 4 && this.x < this.paddle.position.x + 29) {
+
+	          this.setPaddleSound();
+	          this.setLeftSlope();
+
+	          // Left Center Hit - between 30 and 59 pixels
+	        } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 30 && this.x < this.paddle.position.x + 59) {
+
+	            this.setPaddleSound();
+	            this.setLeftCenterSlope();
+
+	            // Center Hit - between 60 and 89 pixels
+	          } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 60 && this.x < this.paddle.position.x + 89) {
+
+	              this.setPaddleSound();
+	              this.setCenterSlope();
+
+	              // Right Center Hit - between 90 and 119 pixels
+	            } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 90 && this.x < this.paddle.position.x + 119) {
+
+	                this.setPaddleSound();
+	                this.setRightCenterSlope();
+
+	                // Right Hit - between 120 and 154 pixels
+	              } else if (this.x > this.paddle.position.x - 4 && this.x > this.paddle.position.x + 120 && this.x < this.paddle.position.x + 154) {
+
+	                  this.setPaddleSound();
+	                  this.setRightSlope();
+	                } else {
+	                  this.game.lives -= 1;
+	                  if (this.game.lives > 0) {
+	                    this.reset();
+	                  } else {
+	                    alert("You Fell into the Wall - GAME OVER");
+	                    this.setDeathSound();
+	                    document.location.reload();
+	                  }
+	                }
 	      }
-	    }
-	    this.x += dx;
-	    this.y += dy;
+	    this.x += this.dx;
+	    this.y += this.dy;
 	  },
 
 	  collisionDetectionBricks: function collisionDetectionBricks() {
@@ -302,13 +371,13 @@
 	      if (self.x > self.bricks[i].position.x && self.x < self.bricks[i].position.x + brickWidth && self.y - self.radius < self.bricks[i].position.y + brickHeight && self.y + self.radius > self.bricks[i].position.y - brickHeight) {
 	        this.game.brickSound.load();
 	        this.game.brickSound.play();
-	        dy = -dy;
+	        this.dy = -this.dy;
 	        self.bricks[i].status = 0;
 	        self.bricks.splice(i, 1);
 	        self.game.score += 10;
 	      }
 	    }
-	    return dy;
+	    return this.dy;
 	  }
 	};
 
@@ -343,9 +412,9 @@
 
 	var Paddle = function Paddle(game) {
 	  this.game = game;
-	  this.size = { x: 100, y: 15 };
+	  this.size = { x: 150, y: 15 };
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
-	  this.position = { x: this.game.size.x / 2 - 50, y: this.game.size.y - 15 };
+	  this.position = { x: this.game.size.x / 2 - 60, y: this.game.size.y - 15 };
 	  this.keyboarder = new Keyboarder();
 	};
 
