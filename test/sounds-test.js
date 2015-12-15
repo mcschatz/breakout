@@ -29,9 +29,4 @@ describe('sounds', function () {
     let sounds = new Sounds();
     assert(sounds.deathSound, '<audio id="death-sound" src="./sounds/death.wav"></audio>');
   });
-
-  it('should have a theme sound', function () {
-    let sounds = new Sounds();
-    assert(sounds.themeSound, '<audio id="theme-sound" src="./sounds/theme.mp3"></audio>');
-  });
 });
