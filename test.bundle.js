@@ -360,8 +360,6 @@
 	    }
 	  },
 
-	  // conditions = { paddleAtBottom: //  }
-
 	  updateGame: function updateGame() {
 	    this.game.lives -= 1;
 	    var lives = this.game.lives;
@@ -369,10 +367,11 @@
 	    if (lives > 0) {
 	      this.pause();
 	      this.resetGame();
-
+	      this.displayStyles('ball-reset', 'inline');
 	      setTimeout((function () {
 	        this.game.status = true;
 	        this.dy = 10;
+	        this.displayStyles('ball-reset', 'none');
 	      }).bind(this), 2000);
 	    } else {
 	      this.loseGame();
