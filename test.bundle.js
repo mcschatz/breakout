@@ -306,6 +306,11 @@
 	    this.sounds.brickSound.play();
 	  },
 
+	  setWinSound: function setWinSound() {
+	    this.sounds.winSound.load();
+	    this.sounds.winSound.play();
+	  },
+
 	  move: function move() {
 	    this.collisionDetectionBricks();
 	    this.collisionDetectionWalls();
@@ -361,6 +366,36 @@
 	    }
 	  },
 
+	  showText: function showText(target, message, index, interval) {
+	    if (index < message.length) {
+	      $(target).append(message[index++]);
+	      var self = this;
+	      setTimeout(function () {
+	        self.showText(target, message, index, interval);
+	      }, interval);
+	    }
+	  },
+
+	  gameEnding: function gameEnding() {
+	    this.sounds.themeSound.volume = 0.00;
+	    this.getId('game-over');
+	    this.displayStyles('winning', 'inline');
+	    this.setWinSound();
+	    this.showText("#won-title", "Congratulations You Won!", 0, 150);
+	    this.showText("#final-score", "Final Score: " + this.game.score, 0, 150);
+	    this.getId('restart').onclick = function () {
+	      document.location.reload();
+	    };
+	  },
+
+	  displayStyles: function displayStyles(location, style) {
+	    document.getElementById(location).style.display = style;
+	  },
+
+	  getId: function getId(id) {
+	    return document.getElementById(id);
+	  },
+
 	  collisionDetectionBricks: function collisionDetectionBricks() {
 	    var self = this;
 	    var brickHeight = self.bricks[0].size.y;
@@ -372,10 +407,16 @@
 	        this.dy = -this.dy;
 	        self.bricks[i].status = 0;
 	        self.bricks.splice(i, 1);
-	        self.game.score += 10;
+
+	        if (self.bricks.length === 0) {
+	          self.game.score += 10;
+	          this.gameEnding();
+	        } else {
+	          self.game.score += 10;
+	          return this.dy;
+	        }
 	      }
 	    }
-	    return this.dy;
 	  },
 
 	  collisionDetectionWalls: function collisionDetectionWalls() {
@@ -428,6 +469,8 @@
 	  this.wallSound = document.getElementById("wall-sound");
 	  this.deathSound = document.getElementById("death-sound");
 	  this.brickSound = document.getElementById("bricks-sound");
+	  this.winSound = document.getElementById("win-sound");
+	  this.themeSound = document.getElementById("theme-sound");
 	};
 
 	module.exports = Sounds;
@@ -8643,35 +8686,39 @@
 
 	var Ball = __webpack_require__(3);
 	var Game = __webpack_require__(2);
+	var Paddle = __webpack_require__(6);
+	var Brick = __webpack_require__(7);
 
 	describe('balls', function () {
 
 	  beforeEach(function () {
 	    this.game = new Game();
+	    this.paddle = new Paddle(this.game);
+	    this.brick = new Brick(this.game);
 	  });
 
 	  it('should instatiate a new ball', function () {
-	    var ball = new Ball(this.game);
+	    var ball = new Ball(this.game, this.paddle, this.brick);
 	    assert.isObject(ball);
 	  });
 
 	  it('should have a X-coordinate', function () {
-	    var ball = new Ball(this.game);
+	    var ball = new Ball(this.game, this.paddle, this.brick);
 	    assert.equal(ball.x, 391);
 	  });
 
 	  it('should have a Y-coordinate', function () {
-	    var ball = new Ball(this.game);
+	    var ball = new Ball(this.game, this.paddle, this.brick);
 	    assert.equal(ball.y, 495);
 	  });
 
 	  it('should have a radius', function () {
-	    var ball = new Ball(this.game);
+	    var ball = new Ball(this.game, this.paddle, this.brick);
 	    assert.equal(ball.radius, 10);
 	  });
 
 	  it('should have a startAngle', function () {
-	    var ball = new Ball(this.game);
+	    var ball = new Ball(this.game, this.paddle, this.brick);
 	    assert.equal(ball.startAngle, 0);
 	  });
 	});

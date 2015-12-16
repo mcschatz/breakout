@@ -297,6 +297,11 @@
 	    this.sounds.brickSound.play();
 	  },
 
+	  setWinSound: function setWinSound() {
+	    this.sounds.winSound.load();
+	    this.sounds.winSound.play();
+	  },
+
 	  move: function move() {
 	    this.collisionDetectionBricks();
 	    this.collisionDetectionWalls();
@@ -352,6 +357,36 @@
 	    }
 	  },
 
+	  showText: function showText(target, message, index, interval) {
+	    if (index < message.length) {
+	      $(target).append(message[index++]);
+	      var self = this;
+	      setTimeout(function () {
+	        self.showText(target, message, index, interval);
+	      }, interval);
+	    }
+	  },
+
+	  gameEnding: function gameEnding() {
+	    this.sounds.themeSound.volume = 0.00;
+	    this.getId('game-over');
+	    this.displayStyles('winning', 'inline');
+	    this.setWinSound();
+	    this.showText("#won-title", "Congratulations You Won!", 0, 150);
+	    this.showText("#final-score", "Final Score: " + this.game.score, 0, 150);
+	    this.getId('restart').onclick = function () {
+	      document.location.reload();
+	    };
+	  },
+
+	  displayStyles: function displayStyles(location, style) {
+	    document.getElementById(location).style.display = style;
+	  },
+
+	  getId: function getId(id) {
+	    return document.getElementById(id);
+	  },
+
 	  collisionDetectionBricks: function collisionDetectionBricks() {
 	    var self = this;
 	    var brickHeight = self.bricks[0].size.y;
@@ -363,10 +398,16 @@
 	        this.dy = -this.dy;
 	        self.bricks[i].status = 0;
 	        self.bricks.splice(i, 1);
-	        self.game.score += 10;
+
+	        if (self.bricks.length === 0) {
+	          self.game.score += 10;
+	          this.gameEnding();
+	        } else {
+	          self.game.score += 10;
+	          return this.dy;
+	        }
 	      }
 	    }
-	    return this.dy;
 	  },
 
 	  collisionDetectionWalls: function collisionDetectionWalls() {
@@ -419,6 +460,8 @@
 	  this.wallSound = document.getElementById("wall-sound");
 	  this.deathSound = document.getElementById("death-sound");
 	  this.brickSound = document.getElementById("bricks-sound");
+	  this.winSound = document.getElementById("win-sound");
+	  this.themeSound = document.getElementById("theme-sound");
 	};
 
 	module.exports = Sounds;
