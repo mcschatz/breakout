@@ -158,15 +158,15 @@
 	  this.bodies = bricks.concat(createBall(this, paddle, bricks)).concat(paddle);
 	  this.score = 0;
 	  this.lives = 3;
+	  this.status = true;
 
-	  var self = this;
-	  var tick = function tick() {
-	    self.move();
-	    self.draw(canvas);
-	    self.drawScore(canvas);
-	    self.drawLives(canvas);
+	  var tick = (function () {
+	    this.move();
+	    this.draw(canvas);
+	    this.drawScore(canvas);
+	    this.drawLives(canvas);
 	    requestAnimationFrame(tick);
-	  };
+	  }).bind(this);
 	  tick();
 	};
 
@@ -189,6 +189,9 @@
 	Game.prototype = {
 
 	  move: function move() {
+	    if (!this.status) {
+	      return;
+	    }
 	    for (var i = 0; i < this.bodies.length; i++) {
 	      if (this.bodies[i].move !== undefined) {
 	        this.bodies[i].move();
@@ -241,8 +244,7 @@
 	  this.radius = 10;
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
 	  this.bricks = bricks;
-	  this.dx = 0;
-	  this.dy = 8;
+	  this.dy = 10;
 	  this.sounds = new Sounds();
 	};
 
@@ -257,28 +259,33 @@
 	  },
 
 	  setLeftSlope: function setLeftSlope() {
-	    this.dx = -10;
-	    this.dy = -this.dy;
+	    this.dx = -13;
+	    this.dy = -8;
 	  },
 
 	  setLeftCenterSlope: function setLeftCenterSlope() {
-	    this.dx = -9;
-	    this.dy = -this.dy;
+	    this.dx = -11;
+	    this.dy = -9;
 	  },
 
-	  setCenterSlope: function setCenterSlope() {
-	    this.dx = 0;
-	    this.dy = -this.dy;
+	  setLeftCenterCenterSlope: function setLeftCenterCenterSlope() {
+	    this.dx = -10;
+	    this.dy = -10;
+	  },
+
+	  setRightCenterCenterSlope: function setRightCenterCenterSlope() {
+	    this.dx = 10;
+	    this.dy = -10;
 	  },
 
 	  setRightCenterSlope: function setRightCenterSlope() {
-	    this.dx = 9;
-	    this.dy = -this.dy;
+	    this.dx = 11;
+	    this.dy = -9;
 	  },
 
 	  setRightSlope: function setRightSlope() {
-	    this.dx = 10;
-	    this.dy = -this.dy;
+	    this.dx = 13;
+	    this.dy = -8;
 	  },
 
 	  setPaddleSound: function setPaddleSound() {
@@ -324,23 +331,27 @@
 	  },
 
 	  collisionDetectionPaddle: function collisionDetectionPaddle() {
-	    if (this.x >= this.paddle.position.x - 4 && this.x <= this.paddle.position.x + 29) {
+	    if (this.x >= this.paddle.position.x - 4 && this.x <= this.paddle.position.x + 24) {
 	      this.setPaddleSound();
 	      this.setLeftSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 30 && this.x <= this.paddle.position.x + 59) {
+	    if (this.x >= this.paddle.position.x + 25 && this.x <= this.paddle.position.x + 49) {
 	      this.setPaddleSound();
 	      this.setLeftCenterSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 60 && this.x <= this.paddle.position.x + 89) {
+	    if (this.x >= this.paddle.position.x + 50 && this.x <= this.paddle.position.x + 74) {
 	      this.setPaddleSound();
-	      this.setCenterSlope();
+	      this.setLeftCenterCenterSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 90 && this.x <= this.paddle.position.x + 119) {
+	    if (this.x >= this.paddle.position.x + 75 && this.x <= this.paddle.position.x + 99) {
+	      this.setPaddleSound();
+	      this.setRightCenterCenterSlope();
+	    }
+	    if (this.x >= this.paddle.position.x + 100 && this.x <= this.paddle.position.x + 124) {
 	      this.setPaddleSound();
 	      this.setRightCenterSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 120 && this.x <= this.paddle.position.x + 154) {
+	    if (this.x >= this.paddle.position.x + 125 && this.x <= this.paddle.position.x + 154) {
 	      this.setPaddleSound();
 	      this.setRightSlope();
 	    }
@@ -349,21 +360,36 @@
 	    }
 	  },
 
+	  // conditions = { paddleAtBottom: //  }
+
 	  updateGame: function updateGame() {
 	    this.game.lives -= 1;
 	    var lives = this.game.lives;
 
 	    if (lives > 0) {
-	      this.startAngle = 0;
-	      this.x = canvas.width / 2;
-	      this.y = canvas.height - 25;
-	      this.dy = -this.dy;
-	      this.paddle.position = { x: this.game.size.x / 2 - 75, y: this.game.size.y - 15 };
+	      this.pause();
+	      this.resetGame();
+
+	      setTimeout((function () {
+	        this.game.status = true;
+	        this.dy = 10;
+	      }).bind(this), 2000);
 	    } else {
-	      alert("GAME OVER");
-	      this.setDeathSound();
-	      document.location.reload();
+	      this.loseGame();
 	    }
+	  },
+
+	  pause: function pause() {
+	    this.dx = 0;
+	    this.dy = 0;
+	    this.game.status = false;
+	  },
+
+	  resetGame: function resetGame() {
+	    this.startAngle = 0;
+	    this.x = canvas.width / 2;
+	    this.y = canvas.height - 25;
+	    this.paddle.position = { x: this.game.size.x / 2 - 75, y: this.game.size.y - 15 };
 	  },
 
 	  showText: function showText(target, message, index, interval) {
@@ -376,14 +402,26 @@
 	    }
 	  },
 
-	  gameEnding: function gameEnding() {
+	  winGame: function winGame() {
 	    this.sounds.themeSound.volume = 0.00;
-	    this.getId('game-over');
 	    this.displayStyles('winning', 'inline');
 	    this.setWinSound();
 	    this.showText("#won-title", "Congratulations You Won!", 0, 150);
 	    this.showText("#final-score", "Final Score: " + this.game.score, 0, 150);
 	    this.getId('restart').onclick = function () {
+	      document.location.reload();
+	    };
+	  },
+
+	  loseGame: function loseGame() {
+	    this.dy = 0;
+	    this.sounds.themeSound.volume = 0.00;
+	    this.sounds.wallSound.volume = 0.00;
+	    this.displayStyles('losing', 'inline');
+	    this.setDeathSound();
+	    this.showText("#lose-title", "Sorry, you died!", 0, 150);
+	    this.showText("#final-score-lose", "Final Score: " + this.game.score, 0, 150);
+	    this.getId('restart-lose').onclick = function () {
 	      document.location.reload();
 	    };
 	  },
@@ -410,7 +448,7 @@
 
 	        if (self.bricks.length === 0) {
 	          self.game.score += 10;
-	          this.gameEnding();
+	          this.winGame();
 	        } else {
 	          self.game.score += 10;
 	          return this.dy;
@@ -500,7 +538,7 @@
 	  },
 
 	  move: function move() {
-	    var paddle_move_speed = 12;
+	    var paddle_move_speed = 19;
 
 	    if (this.keyboarder.isDown(this.keyboarder.KEYS.LEFT) && this.position.x > 0) {
 	      this.position.x -= paddle_move_speed;
