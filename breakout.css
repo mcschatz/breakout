@@ -84,7 +84,7 @@ body {
   z-index: 1;
   margin: auto;
   position: absolute;
-  top: 400px; left: 0; bottom: 0; right: 0;
+  top: 0; left: 0; bottom: 0; right: 0;
   text-align: center;
   padding-left: 0;
   padding-right: 0;
@@ -93,7 +93,7 @@ body {
   margin-right: auto;
   font-family: 'Press Start 2P', cursive;
   display: none;
-  margin-top: 20px;
+  margin-top: 30px;
   color: white;
 }
 
