@@ -6,7 +6,7 @@ const Paddle = require('../lib/paddle.js');
 
 
 describe('paddle', function () {
-  var canvas = document.createElement('canvas')
+  var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
 
   beforeEach(function() {
@@ -68,9 +68,9 @@ describe('paddle', function () {
     assert.ok(paddle.move);
   });
 
-  it('does move if the key is not down', function () {
+  it('does not move if the key is not down', function () {
     let paddle = new Paddle(this.game);
-    paddle.keyboarder.isDown() === true;
+    paddle.keyboarder.isDown();
     paddle.position.x = 20;
     assert.equal(paddle.position.x, 20);
   });
