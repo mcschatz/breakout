@@ -35,4 +35,9 @@ describe('paddle', function () {
     let paddle = new Paddle(this.game);
     assert.equal(paddle.position.y, 505);
   });
+
+  it('should have instatiate a new Keyboarder', function(){
+    let paddle = new Paddle(this.game);
+    assert.isObject(paddle.keyboarder, 505);
+  });
 });
