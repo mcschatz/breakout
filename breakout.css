@@ -78,14 +78,36 @@ body {
   color: white;
 }
 
+#ball-reset {
+  width: 782px;
+  height: 520px;
+  z-index: 1;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Press Start 2P', cursive;
+  display: none;
+  margin-top: 30px;
+  color: white;
+}
+
+#lives-reset {
+  font-size: 20px;
+  text-align: center;
+}
+
 #restart {
   margin-top: 85px;
-
 }
 
 #restart-lose {
   margin-top: 85px;
-
 }
 
 #continue {
