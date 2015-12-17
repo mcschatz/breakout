@@ -26,6 +26,16 @@ describe('paddle', function () {
     assert.equal(paddle.size.y, 15);
   });
 
+  it('should be associated with a game size x cord', function(){
+    let paddle = new Paddle(this.game);
+    assert.equal(paddle.gameSize.x, 782);
+  });
+
+  it('should be associated with a game size y cord', function(){
+    let paddle = new Paddle(this.game);
+    assert.equal(paddle.gameSize.y, 520);
+  });
+
   it('should have an x-coordinate position', function(){
     let paddle = new Paddle(this.game);
     assert.equal(paddle.position.x, 316);
