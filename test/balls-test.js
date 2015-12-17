@@ -38,4 +38,15 @@ describe('balls', function () {
     let ball = new Ball(this.game, this.paddle, this.brick);
     assert.equal(ball.startAngle, 0);
   });
+
+  it('should have a velocity', function(){
+    let ball = new Ball(this.game, this.paddle, this.brick);
+    assert.equal(ball.dy, 10);
+  });
+
+  it('should have a gameSize', function(){
+    let ball = new Ball(this.game, this.paddle, this.brick);
+    assert.equal(ball.gameSize.x, 782);
+    assert.equal(ball.gameSize.y, 520);
+  });
 });
