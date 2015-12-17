@@ -6,3 +6,4 @@ require('./paddle-test.js');
 require('./start-test.js');
 require('./color-test.js');
 require('./sounds-test.js');
+require('./styles-test.js');
