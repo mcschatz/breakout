@@ -138,6 +138,8 @@
 	var Brick = __webpack_require__(7);
 	var Colors = __webpack_require__(8);
 	var Canvas = __webpack_require__(4);
+	var Styles = __webpack_require__(9);
+	var Sounds = __webpack_require__(5);
 
 	var Game = function Game() {
 	  var canvas = new Canvas();
@@ -146,7 +148,7 @@
 	  var paddle = new Paddle(this);
 	  var bricks = createBricks(this);
 
-	  this.bodies = bricks.concat(createBall(this, paddle, bricks)).concat(paddle);
+	  this.bodies = createBall(this, paddle, bricks).concat(paddle).concat(bricks);
 	  this.score = 0;
 	  this.lives = 3;
 	  this.status = true;
@@ -169,7 +171,7 @@
 
 	var createBricks = function createBricks(game) {
 	  var bricks = [];
-	  for (var i = 0; i < 54; i++) {
+	  for (var i = 0; i < 1; i++) {
 	    var x = Math.floor(i / 6) * 87;
 	    var y = 70 + i % 6 * 18;
 	    bricks.push(new Brick(game, { x: x, y: y }));
@@ -210,6 +212,60 @@
 	    canvas.font = '16px monospace';
 	    canvas.fillStyle = "#0095DD ";
 	    canvas.fillText("Lives: " + this.lives, 700, 20);
+	  },
+
+	  updateGame: function updateGame() {
+	    this.lives -= 1;
+
+	    if (this.lives > 0) {
+	      this.pause();
+	      this.resetGame();
+	      Styles.displayStyles('ball-reset', 'inline');
+	      setTimeout((function () {
+	        this.status = true;
+	        this.bodies[0].dy = 10;
+	        Styles.displayStyles('ball-reset', 'none');
+	      }).bind(this), 2000);
+	    } else {
+	      this.loseGame();
+	    }
+	  },
+
+	  pause: function pause() {
+	    this.bodies[0].dx = 0;
+	    this.bodies[0].dy = 0;
+	    this.status = false;
+	  },
+
+	  resetGame: function resetGame() {
+	    this.bodies[0].startAngle = 0;
+	    this.bodies[0].x = canvas.width / 2;
+	    this.bodies[0].y = canvas.height - 25;
+	    this.bodies[1].position = { x: this.size.x / 2 - 75, y: this.size.y - 15 };
+	  },
+
+	  winGame: function winGame() {
+	    Sounds.theme.volume = 0.00;
+	    Styles.displayStyles('winning', 'inline');
+	    Sounds.win();
+	    Styles.showText("#won-title", "Congratulations You Won!", 0, 150);
+	    Styles.showText("#final-score", "Final Score: " + this.score, 0, 150);
+	    Styles.getId('restart').onclick = function () {
+	      document.location.reload();
+	    };
+	  },
+
+	  loseGame: function loseGame() {
+	    this.bodies[0].dy = 0;
+	    Sounds.theme.volume = 0.00;
+	    Sounds.wall.volume = 0.00;
+	    Styles.displayStyles('losing', 'inline');
+	    Sounds.death();
+	    Styles.showText("#lose-title", "Sorry, you died!", 0, 150);
+	    Styles.showText("#final-score-lose", "Final Score: " + this.score, 0, 150);
+	    Styles.getId('restart-lose').onclick = function () {
+	      document.location.reload();
+	    };
 	  }
 	};
 
@@ -236,7 +292,6 @@
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
 	  this.bricks = bricks;
 	  this.dy = 10;
-	  this.sounds = new Sounds();
 	};
 
 	Ball.prototype = {
@@ -279,36 +334,6 @@
 	    this.dy = -8;
 	  },
 
-	  setPaddleSound: function setPaddleSound() {
-	    this.sounds.paddleSound.load();
-	    this.sounds.paddleSound.play();
-	  },
-
-	  setWallSound: function setWallSound() {
-	    this.sounds.wallSound.load();
-	    this.sounds.wallSound.play();
-	  },
-
-	  setTopSound: function setTopSound() {
-	    this.sounds.topSound.load();
-	    this.sounds.topSound.play();
-	  },
-
-	  setDeathSound: function setDeathSound() {
-	    this.sounds.deathSound.load();
-	    this.sounds.deathSound.play();
-	  },
-
-	  setBrickSound: function setBrickSound() {
-	    this.sounds.brickSound.load();
-	    this.sounds.brickSound.play();
-	  },
-
-	  setWinSound: function setWinSound() {
-	    this.sounds.winSound.load();
-	    this.sounds.winSound.play();
-	  },
-
 	  move: function move() {
 	    this.collisionDetectionBricks();
 	    this.collisionDetectionWalls();
@@ -322,106 +347,30 @@
 	  },
 
 	  collisionDetectionPaddle: function collisionDetectionPaddle() {
-	    if (this.x >= this.paddle.position.x - 4 && this.x <= this.paddle.position.x + 24) {
-	      this.setPaddleSound();
+	    if (this.x >= this.paddle.position.x - this.radius && this.x <= this.paddle.position.x + 24) {
+	      Sounds.paddle();
 	      this.setLeftSlope();
 	    }
 	    if (this.x >= this.paddle.position.x + 25 && this.x <= this.paddle.position.x + 49) {
-	      this.setPaddleSound();
+	      Sounds.paddle();
 	      this.setLeftCenterSlope();
 	    }
 	    if (this.x >= this.paddle.position.x + 50 && this.x <= this.paddle.position.x + 74) {
-	      this.setPaddleSound();
+	      Sounds.paddle();
 	      this.setLeftCenterCenterSlope();
 	    }
 	    if (this.x >= this.paddle.position.x + 75 && this.x <= this.paddle.position.x + 99) {
-	      this.setPaddleSound();
+	      Sounds.paddle();
 	      this.setRightCenterCenterSlope();
 	    }
 	    if (this.x >= this.paddle.position.x + 100 && this.x <= this.paddle.position.x + 124) {
-	      this.setPaddleSound();
+	      Sounds.paddle();
 	      this.setRightCenterSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 125 && this.x <= this.paddle.position.x + 154) {
-	      this.setPaddleSound();
+	    if (this.x >= this.paddle.position.x + 125 && this.x <= this.paddle.position.x + 150 + this.radius) {
+	      Sounds.paddle();
 	      this.setRightSlope();
 	    }
-	    if (this.x < this.paddle.position.x - 4 || this.x > this.paddle.position.x + 154) {
-	      this.updateGame();
-	    }
-	  },
-
-	  updateGame: function updateGame() {
-	    this.game.lives -= 1;
-	    var lives = this.game.lives;
-
-	    if (lives > 0) {
-	      this.pause();
-	      this.resetGame();
-	      this.displayStyles('ball-reset', 'inline');
-	      setTimeout((function () {
-	        this.game.status = true;
-	        this.dy = 10;
-	        this.displayStyles('ball-reset', 'none');
-	      }).bind(this), 2000);
-	    } else {
-	      this.loseGame();
-	    }
-	  },
-
-	  pause: function pause() {
-	    this.dx = 0;
-	    this.dy = 0;
-	    this.game.status = false;
-	  },
-
-	  resetGame: function resetGame() {
-	    this.startAngle = 0;
-	    this.x = canvas.width / 2;
-	    this.y = canvas.height - 25;
-	    this.paddle.position = { x: this.game.size.x / 2 - 75, y: this.game.size.y - 15 };
-	  },
-
-	  showText: function showText(target, message, index, interval) {
-	    if (index < message.length) {
-	      $(target).append(message[index++]);
-	      var self = this;
-	      setTimeout(function () {
-	        self.showText(target, message, index, interval);
-	      }, interval);
-	    }
-	  },
-
-	  winGame: function winGame() {
-	    this.sounds.themeSound.volume = 0.00;
-	    this.displayStyles('winning', 'inline');
-	    this.setWinSound();
-	    this.showText("#won-title", "Congratulations You Won!", 0, 150);
-	    this.showText("#final-score", "Final Score: " + this.game.score, 0, 150);
-	    this.getId('restart').onclick = function () {
-	      document.location.reload();
-	    };
-	  },
-
-	  loseGame: function loseGame() {
-	    this.dy = 0;
-	    this.sounds.themeSound.volume = 0.00;
-	    this.sounds.wallSound.volume = 0.00;
-	    this.displayStyles('losing', 'inline');
-	    this.setDeathSound();
-	    this.showText("#lose-title", "Sorry, you died!", 0, 150);
-	    this.showText("#final-score-lose", "Final Score: " + this.game.score, 0, 150);
-	    this.getId('restart-lose').onclick = function () {
-	      document.location.reload();
-	    };
-	  },
-
-	  displayStyles: function displayStyles(location, style) {
-	    document.getElementById(location).style.display = style;
-	  },
-
-	  getId: function getId(id) {
-	    return document.getElementById(id);
 	  },
 
 	  collisionDetectionBricks: function collisionDetectionBricks() {
@@ -431,14 +380,14 @@
 
 	    for (var i = 0; i < self.bricks.length; i++) {
 	      if (self.x > self.bricks[i].position.x && self.x < self.bricks[i].position.x + brickWidth && self.y - self.radius < self.bricks[i].position.y + brickHeight && self.y + self.radius > self.bricks[i].position.y - brickHeight) {
-	        this.setBrickSound();
+	        Sounds.brick();
 	        this.dy = -this.dy;
 	        self.bricks[i].status = 0;
 	        self.bricks.splice(i, 1);
 
 	        if (self.bricks.length === 0) {
 	          self.game.score += 10;
-	          this.winGame();
+	          this.game.winGame();
 	        } else {
 	          self.game.score += 10;
 	          return this.dy;
@@ -451,13 +400,18 @@
 	    var self = this;
 
 	    if (self.x + self.dx > self.gameSize.x - self.radius || self.x + self.dx < self.radius) {
-	      self.setWallSound();
+	      Sounds.wall();
 	      self.dx = -self.dx;
 	    }
 
 	    if (self.y - self.canvasHeightOffset + self.dy < self.radius) {
-	      self.setTopSound();
+	      Sounds.top();
 	      self.dy = -self.dy;
+	    }
+
+	    if (self.y > 520) {
+	      self.game.status = false;
+	      self.game.updateGame();
 	    }
 	  }
 	};
@@ -491,17 +445,50 @@
 
 	"use strict";
 
-	var Sounds = function Sounds() {
-	  this.paddleSound = document.getElementById("paddle-sound");
-	  this.topSound = document.getElementById("top-sound");
-	  this.wallSound = document.getElementById("wall-sound");
-	  this.deathSound = document.getElementById("death-sound");
-	  this.brickSound = document.getElementById("bricks-sound");
-	  this.winSound = document.getElementById("win-sound");
-	  this.themeSound = document.getElementById("theme-sound");
-	};
+	module.exports = {
 
-	module.exports = Sounds;
+	  paddle: function paddle() {
+	    var paddleSound = document.getElementById("paddle-sound");
+	    paddleSound.load();
+	    paddleSound.play();
+	  },
+
+	  wall: function wall() {
+	    var wallSound = document.getElementById("wall-sound");
+	    wallSound.load();
+	    wallSound.play();
+	  },
+
+	  top: function top() {
+	    var topSound = document.getElementById("top-sound");
+	    topSound.load();
+	    topSound.play();
+	  },
+
+	  death: function death() {
+	    var deathSound = document.getElementById("death-sound");
+	    deathSound.load();
+	    deathSound.play();
+	  },
+
+	  brick: function brick() {
+	    var brickSound = document.getElementById("bricks-sound");
+	    brickSound.load();
+	    brickSound.play();
+	  },
+
+	  win: function win() {
+	    var winSound = document.getElementById("win-sound");
+	    winSound.load();
+	    winSound.play();
+	  },
+
+	  theme: function theme() {
+	    var themeSound = document.getElementById("theme-sound");
+	    themeSound.load();
+	    themeSound.play();
+	  }
+	};
 
 /***/ },
 /* 6 */
@@ -571,7 +558,6 @@
 	};
 
 	Brick.prototype = {
-
 	  draw: function draw(canvas, color) {
 	    if (this.status === 1) {
 	      canvas.beginPath();
@@ -607,6 +593,33 @@
 	};
 
 	module.exports = Colors;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = {
+
+	  displayStyles: function displayStyles(location, style) {
+	    document.getElementById(location).style.display = style;
+	  },
+
+	  getId: function getId(id) {
+	    return document.getElementById(id);
+	  },
+
+	  showText: function showText(target, message, index, interval) {
+	    if (index < message.length) {
+	      $(target).append(message[index++]);
+	      var self = this;
+	      setTimeout(function () {
+	        self.showText(target, message, index, interval);
+	      }, interval);
+	    }
+	  }
+	};
 
 /***/ }
 /******/ ]);
