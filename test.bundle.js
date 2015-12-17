@@ -60,83 +60,7 @@
 	}
 
 /***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Game = __webpack_require__(2);
-
-	var Start = function Start() {
-
-	  if (document.getElementById('canvas')) {
-	    var canvasId = document.getElementById("canvas");
-	    var canvas = document.getElementById('canvas').getContext('2d');
-	  } else {
-	    var canvasId = document.createElement('canvas');
-	    canvasId.width = 782;
-	    canvasId.height = 520;
-	    var canvas = canvasId.getContext('2d');
-	  }
-
-	  this.size = { x: canvas.canvas.width, y: canvas.canvas.height };
-	  this.themeSound = document.getElementById("theme-sound");
-	  this.themeSound.load();
-	  this.themeSound.play();
-
-	  var self = this;
-	  var start = function start(canvas, canvasId) {
-	    self.draw(canvas);
-	    self.begin(canvasId, self);
-	  };
-	  start(canvas, canvasId);
-	};
-
-	Start.prototype = {
-
-	  draw: function draw(canvas) {
-	    var y = this.size.y / 3;
-
-	    function centerText(canvas, text, y) {
-	      var measurement = canvas.measureText(text);
-	      var x = (canvas.canvas.width - measurement.width) / 2;
-	      canvas.fillText(text, x, y);
-	    }
-
-	    canvas.clearRect(0, 0, this.size.x, this.size.y);
-	    canvas.fillStyle = 'white';
-	    canvas.font = '48px monospace';
-	    centerText(canvas, 'Break Out', y);
-
-	    canvas.fillStyle = "white";
-	    canvas.font = '24px monospace';
-	    centerText(canvas, 'Click Anywhere to Begin!', y + 40);
-	  },
-
-	  begin: function begin(canvasId, self) {
-
-	    canvasId.addEventListener('click', function game() {
-	      new Game();
-	      function theme(self) {
-	        self.themeSound.volume = 1.00;
-	        for (var i = 0; i < 10; i++) {
-	          setTimeout((function (x) {
-	            return function () {
-	              self.themeSound.volume = self.themeSound.volume - 0.082;
-	            };
-	          })(i), 1000 * i);
-	        };
-	      }
-
-	      theme(self);
-	      canvasId.removeEventListener('click', game);
-	    });
-	  }
-	};
-
-	module.exports = Start;
-
-/***/ },
+/* 1 */,
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -180,7 +104,7 @@
 
 	var createBricks = function createBricks(game) {
 	  var bricks = [];
-	  for (var i = 0; i < 1; i++) {
+	  for (var i = 0; i < 54; i++) {
 	    var x = Math.floor(i / 6) * 87;
 	    var y = 70 + i % 6 * 18;
 	    bricks.push(new Brick(game, { x: x, y: y }));
@@ -254,7 +178,7 @@
 	  },
 
 	  winGame: function winGame() {
-	    Sounds.theme.volume = 0.00;
+	    Sounds.stopTheme();
 	    Styles.displayStyles('winning', 'inline');
 	    Sounds.win();
 	    Styles.showText("#won-title", "Congratulations You Won!", 0, 150);
@@ -266,8 +190,7 @@
 
 	  loseGame: function loseGame() {
 	    this.bodies[0].dy = 0;
-	    Sounds.theme.volume = 0.00;
-	    Sounds.wall.volume = 0.00;
+	    Sounds.stopTheme();
 	    Styles.displayStyles('losing', 'inline');
 	    Sounds.death();
 	    Styles.showText("#lose-title", "Sorry, you died!", 0, 150);
@@ -494,8 +417,15 @@
 
 	  theme: function theme() {
 	    var themeSound = document.getElementById("theme-sound");
+	    themeSound.volume = 0.45;
 	    themeSound.load();
 	    themeSound.play();
+	  },
+
+	  stopTheme: function stopTheme() {
+	    var themeSound = document.getElementById("theme-sound");
+	    themeSound.load();
+	    themeSound.pause();
 	  }
 	};
 
@@ -8827,30 +8757,6 @@
 	var chai = __webpack_require__(19);
 	var assert = chai.assert;
 
-	var Start = __webpack_require__(1);
-
-	describe('start', function () {
-
-	  it('should instatiate a new start', function () {
-	    var start = new Start();
-	    assert.isObject(start);
-	  });
-
-	  it('should have an annoying theme song', function () {
-	    var start = new Start();
-	    assert.ok(start.themeSound);
-	  });
-	});
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var chai = __webpack_require__(19);
-	var assert = chai.assert;
-
 	var Color = __webpack_require__(8);
 
 	describe('colors', function () {
@@ -8897,7 +8803,7 @@
 	});
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8909,33 +8815,41 @@
 
 	describe('sounds', function () {
 
-	  // it('should instaniate a new sound class', function () {
-	  //   let sounds = new Sounds();
-	  //   assert.isObject(sounds);
-	  // });
+	  it('should have a paddle sound', function () {
+	    assert.ok(Sounds.paddle);
+	  });
 
-	  // it('should have a paddle sound', function () {
-	  //   assert.ok(Sounds.paddle());
-	  // });
+	  it('should have a wall sound', function () {
+	    assert.ok(Sounds.wall);
+	  });
 
-	  // it('should have a top sound', function () {
-	  //   let sounds = new Sounds();
-	  //   assert(sounds.topSound, '<audio id="top-sound" src="./sounds/top.mp3"></audio>');
-	  // });
+	  it('should have a top sound', function () {
+	    assert.ok(Sounds.top);
+	  });
 
-	  // it('should have a wall sound', function () {
-	  //   let sounds = new Sounds();
-	  //   assert(sounds.wallSound, '<audio id="wall-sound" src="./sounds/wall.mp3"></audio>');
-	  // });
+	  it('should have a death sound', function () {
+	    assert.ok(Sounds.death);
+	  });
 
-	  // it('should have a death sound', function () {
-	  //   let sounds = new Sounds();
-	  //   assert(sounds.deathSound, '<audio id="death-sound" src="./sounds/death.wav"></audio>');
-	  // });
+	  it('should have a brick sound', function () {
+	    assert.ok(Sounds.brick);
+	  });
+
+	  it('should have a win sound', function () {
+	    assert.ok(Sounds.win);
+	  });
+
+	  it('should have a theme sound', function () {
+	    assert.ok(Sounds.theme);
+	  });
+
+	  it('should have a stopTheme sound', function () {
+	    assert.ok(Sounds.stopTheme);
+	  });
 	});
 
 /***/ },
-/* 64 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8949,6 +8863,7 @@
 
 	  it('should be a module', function () {
 	    var styles = Styles;
+	    assert.ok(styles);
 	  });
 
 	  it('sets the style', function () {
@@ -8965,6 +8880,63 @@
 	  it('should return a message', function () {
 	    var styles = Styles.showText("#won-title", "Hi Steve!", 0, 150);
 	    var id = Styles.getId("won-title");
+	    assert.ok(id);
+	  });
+	});
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var chai = __webpack_require__(19);
+	var assert = chai.assert;
+
+	var Brick = __webpack_require__(7);
+	var Game = __webpack_require__(2);
+
+	describe('bricks', function () {
+	  var canvas = document.createElement('canvas');
+	  var ctx = canvas.getContext('2d');
+
+	  beforeEach(function () {
+	    this.game = new Game();
+	  });
+
+	  it('should instatiate a new brick', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.isObject(brick);
+	  });
+
+	  it('should be associated with a game', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.equal(brick.game, this.game);
+	  });
+
+	  it('should have a position consisting of an x cord', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.equal(brick.position.x, 100);
+	  });
+
+	  it('should have a position consisting of an y cord', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.equal(brick.position.y, 50);
+	  });
+
+	  it('should have status of defaulting to one', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.equal(brick.status, 1);
+	  });
+
+	  it('should have draw method', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.ok(brick.draw);
+	  });
+
+	  it('should have draw method', function () {
+	    var brick = new Brick(this.game, { x: 100, y: 50 });
+	    assert.equal(brick.draw(ctx, "#000000"), undefined);
 	  });
 	});
 

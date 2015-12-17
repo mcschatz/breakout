@@ -57,72 +57,17 @@
 	'use strict';
 
 	var Game = __webpack_require__(2);
+	var Styles = __webpack_require__(9);
+	var Sounds = __webpack_require__(5);
 
 	var Start = function Start() {
-
-	  if (document.getElementById('canvas')) {
-	    var canvasId = document.getElementById("canvas");
-	    var canvas = document.getElementById('canvas').getContext('2d');
-	  } else {
-	    var canvasId = document.createElement('canvas');
-	    canvasId.width = 782;
-	    canvasId.height = 520;
-	    var canvas = canvasId.getContext('2d');
-	  }
-
-	  this.size = { x: canvas.canvas.width, y: canvas.canvas.height };
-	  this.themeSound = document.getElementById("theme-sound");
-	  this.themeSound.load();
-	  this.themeSound.play();
-
-	  var self = this;
-	  var start = function start(canvas, canvasId) {
-	    self.draw(canvas);
-	    self.begin(canvasId, self);
-	  };
-	  start(canvas, canvasId);
-	};
-
-	Start.prototype = {
-
-	  draw: function draw(canvas) {
-	    var y = this.size.y / 3;
-
-	    function centerText(canvas, text, y) {
-	      var measurement = canvas.measureText(text);
-	      var x = (canvas.canvas.width - measurement.width) / 2;
-	      canvas.fillText(text, x, y);
-	    }
-
-	    canvas.clearRect(0, 0, this.size.x, this.size.y);
-	    canvas.fillStyle = 'white';
-	    canvas.font = '48px monospace';
-	    centerText(canvas, 'Break Out', y);
-
-	    canvas.fillStyle = "white";
-	    canvas.font = '24px monospace';
-	    centerText(canvas, 'Click Anywhere to Begin!', y + 40);
-	  },
-
-	  begin: function begin(canvasId, self) {
-
-	    canvasId.addEventListener('click', function game() {
-	      new Game();
-	      function theme(self) {
-	        self.themeSound.volume = 1.00;
-	        for (var i = 0; i < 10; i++) {
-	          setTimeout((function (x) {
-	            return function () {
-	              self.themeSound.volume = self.themeSound.volume - 0.082;
-	            };
-	          })(i), 1000 * i);
-	        };
-	      }
-
-	      theme(self);
-	      canvasId.removeEventListener('click', game);
-	    });
-	  }
+	  Sounds.theme();
+	  Styles.displayStyles('game-start', 'inline');
+	  Styles.displayStyles('start-title', 'inline');
+	  $("#game-start").click(function () {
+	    new Game();
+	    Styles.displayStyles('game-start', 'none');
+	  });
 	};
 
 	module.exports = Start;
@@ -171,7 +116,7 @@
 
 	var createBricks = function createBricks(game) {
 	  var bricks = [];
-	  for (var i = 0; i < 1; i++) {
+	  for (var i = 0; i < 54; i++) {
 	    var x = Math.floor(i / 6) * 87;
 	    var y = 70 + i % 6 * 18;
 	    bricks.push(new Brick(game, { x: x, y: y }));
@@ -245,7 +190,7 @@
 	  },
 
 	  winGame: function winGame() {
-	    Sounds.theme.volume = 0.00;
+	    Sounds.stopTheme();
 	    Styles.displayStyles('winning', 'inline');
 	    Sounds.win();
 	    Styles.showText("#won-title", "Congratulations You Won!", 0, 150);
@@ -257,8 +202,7 @@
 
 	  loseGame: function loseGame() {
 	    this.bodies[0].dy = 0;
-	    Sounds.theme.volume = 0.00;
-	    Sounds.wall.volume = 0.00;
+	    Sounds.stopTheme();
 	    Styles.displayStyles('losing', 'inline');
 	    Sounds.death();
 	    Styles.showText("#lose-title", "Sorry, you died!", 0, 150);
@@ -485,8 +429,15 @@
 
 	  theme: function theme() {
 	    var themeSound = document.getElementById("theme-sound");
+	    themeSound.volume = 0.45;
 	    themeSound.load();
 	    themeSound.play();
+	  },
+
+	  stopTheme: function stopTheme() {
+	    var themeSound = document.getElementById("theme-sound");
+	    themeSound.load();
+	    themeSound.pause();
 	  }
 	};
 
