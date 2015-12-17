@@ -4,7 +4,6 @@ const assert = chai.assert;
 const Game = require('../lib/game.js');
 const Paddle = require('../lib/paddle.js');
 
-
 describe('paddle', function () {
   var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');

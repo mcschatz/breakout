@@ -12,7 +12,7 @@ describe('balls', function () {
     this.game = new Game();
     this.paddle = new Paddle(this.game);
     this.brick = new Brick(this.game, {x: 87, y: 18});
-    this.bricks = this.game.bodies.splice(2,54)
+    this.bricks = this.game.bodies.splice(2,54);
     this.ball = new Ball(this.game, this.paddle, this.bricks);
   });
 
@@ -83,7 +83,7 @@ describe('balls', function () {
   });
 
   it('should detect a right wall collision', function(){
-    this.ball.x = 800
+    this.ball.x = 800;
     assert.equal(this.ball.dx, -10);
 
     this.ball.collisionDetectionWalls();
@@ -91,7 +91,7 @@ describe('balls', function () {
   });
 
   it('should detect a left wall collision', function(){
-    this.ball.x = 0
+    this.ball.x = 0;
     assert.equal(this.ball.dx, -10);
 
     this.ball.collisionDetectionWalls();
@@ -99,7 +99,7 @@ describe('balls', function () {
   });
 
   it('should detect a top wall collision', function(){
-    this.ball.y = 0
+    this.ball.y = 0;
     assert.equal(this.ball.dy, 10);
 
     this.ball.collisionDetectionWalls();
@@ -117,7 +117,7 @@ describe('balls', function () {
 
     this.ball.collisionDetectionBricks();
     assert.equal(this.bricks.length, 53);
-  })
+  });
 
   it('should not hit a brick if the ball does not touches a brick', function(){
     this.bricks[53].size.x = 100;
@@ -126,9 +126,9 @@ describe('balls', function () {
     this.ball.y = 480;
     this.bricks[53].position.x = 300;
     this.bricks[53].position.y = 75;
-    this.bricks[53].status = 0
+    this.bricks[53].status = 0;
 
     this.ball.collisionDetectionBricks();
-    assert.equal(this.bricks.length, 54)
-  })
+    assert.equal(this.bricks.length, 54);
+  });
 });
