@@ -6,14 +6,14 @@ const Styles = require('../lib/styles.js');
 describe('styles', function () {
 
   it('should be a module', function () {
-    let styles = Styles
-    assert.ok(styles)
+    let styles = Styles;
+    assert.ok(styles);
   });
 
   it('sets the style', function(){
     let styles = Styles.displayStyles('winning', 'inline');
     let id = Styles.getId("winning");
-    assert.ok(id)
+    assert.ok(id);
   });
 
   it('gets the Id', function(){
@@ -24,6 +24,6 @@ describe('styles', function () {
   it('should return a message', function () {
     let styles = Styles.showText("#won-title", "Hi Steve!", 0, 150);
     let id = Styles.getId("won-title");
-    assert.ok(id)
+    assert.ok(id);
   });
 });
