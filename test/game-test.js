@@ -147,19 +147,4 @@ describe('game', function () {
     game.resetGame();
     assert.equal(game.bodies[1].position.y, 505);
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 });
