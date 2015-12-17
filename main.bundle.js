@@ -57,7 +57,7 @@
 	'use strict';
 
 	var Game = __webpack_require__(2);
-	var Styles = __webpack_require__(9);
+	var Styles = __webpack_require__(10);
 	var Sounds = __webpack_require__(5);
 
 	var Start = function Start() {
@@ -79,33 +79,23 @@
 	'use strict';
 
 	var Ball = __webpack_require__(3);
-	var Paddle = __webpack_require__(6);
-	var Brick = __webpack_require__(7);
-	var Colors = __webpack_require__(8);
+	var Paddle = __webpack_require__(7);
+	var Brick = __webpack_require__(8);
+	var Colors = __webpack_require__(9);
 	var Canvas = __webpack_require__(4);
-	var Styles = __webpack_require__(9);
+	var Styles = __webpack_require__(10);
 	var Sounds = __webpack_require__(5);
 
 	var Game = function Game() {
 	  var canvas = new Canvas();
-
 	  this.size = { x: canvas.canvas.width, y: canvas.canvas.height };
 	  var paddle = new Paddle(this);
 	  var bricks = createBricks(this);
-
 	  this.bodies = createBall(this, paddle, bricks).concat(paddle).concat(bricks);
 	  this.score = 0;
 	  this.lives = 3;
 	  this.status = true;
-
-	  var tick = (function () {
-	    this.move();
-	    this.draw(canvas);
-	    this.drawScore(canvas);
-	    this.drawLives(canvas);
-	    requestAnimationFrame(tick);
-	  }).bind(this);
-	  tick();
+	  this.tick(canvas);
 	};
 
 	var createBall = function createBall(game, paddle, bricks) {
@@ -120,11 +110,19 @@
 	    var x = Math.floor(i / 6) * 87;
 	    var y = 70 + i % 6 * 18;
 	    bricks.push(new Brick(game, { x: x, y: y }));
-	  };
+	  }
 	  return bricks;
 	};
 
 	Game.prototype = {
+
+	  tick: function tick(canvas) {
+	    this.move();
+	    this.draw(canvas);
+	    this.drawScore(canvas);
+	    this.drawLives(canvas);
+	    requestAnimationFrame(this.tick.bind(this, canvas));
+	  },
 
 	  move: function move() {
 	    if (!this.status) {
@@ -184,8 +182,8 @@
 
 	  resetGame: function resetGame() {
 	    this.bodies[0].startAngle = 0;
-	    this.bodies[0].x = canvas.width / 2;
-	    this.bodies[0].y = canvas.height - 25;
+	    this.bodies[0].x = this.size.x / 2;
+	    this.bodies[0].y = this.size.y - 25;
 	    this.bodies[1].position = { x: this.size.x / 2 - 75, y: this.size.y - 15 };
 	  },
 
@@ -223,6 +221,7 @@
 
 	var Canvas = __webpack_require__(4);
 	var Sounds = __webpack_require__(5);
+	var Location = __webpack_require__(6);
 
 	var Ball = function Ball(game, paddle, bricks) {
 	  var canvas = new Canvas().canvas;
@@ -236,6 +235,7 @@
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
 	  this.bricks = bricks;
 	  this.dy = 10;
+	  this.dx = -10;
 	};
 
 	Ball.prototype = {
@@ -246,36 +246,6 @@
 	    canvas.fillStyle = "#F00000";
 	    canvas.fill();
 	    canvas.closePath();
-	  },
-
-	  setLeftSlope: function setLeftSlope() {
-	    this.dx = -13;
-	    this.dy = -8;
-	  },
-
-	  setLeftCenterSlope: function setLeftCenterSlope() {
-	    this.dx = -11;
-	    this.dy = -9;
-	  },
-
-	  setLeftCenterCenterSlope: function setLeftCenterCenterSlope() {
-	    this.dx = -10;
-	    this.dy = -10;
-	  },
-
-	  setRightCenterCenterSlope: function setRightCenterCenterSlope() {
-	    this.dx = 10;
-	    this.dy = -10;
-	  },
-
-	  setRightCenterSlope: function setRightCenterSlope() {
-	    this.dx = 11;
-	    this.dy = -9;
-	  },
-
-	  setRightSlope: function setRightSlope() {
-	    this.dx = 13;
-	    this.dy = -8;
 	  },
 
 	  move: function move() {
@@ -291,49 +261,48 @@
 	  },
 
 	  collisionDetectionPaddle: function collisionDetectionPaddle() {
-	    if (this.x >= this.paddle.position.x - this.radius && this.x <= this.paddle.position.x + 24) {
+	    if (Location.outterLeft(this)) {
 	      Sounds.paddle();
-	      this.setLeftSlope();
+	      this.setOutterLeftSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 25 && this.x <= this.paddle.position.x + 49) {
+	    if (Location.innerLeft(this)) {
 	      Sounds.paddle();
-	      this.setLeftCenterSlope();
+	      this.setInnerLeftSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 50 && this.x <= this.paddle.position.x + 74) {
+	    if (Location.centerLeft(this)) {
 	      Sounds.paddle();
-	      this.setLeftCenterCenterSlope();
+	      this.setCenterLeftSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 75 && this.x <= this.paddle.position.x + 99) {
+	    if (Location.centerRight(this)) {
 	      Sounds.paddle();
-	      this.setRightCenterCenterSlope();
+	      this.setCenterRightSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 100 && this.x <= this.paddle.position.x + 124) {
+	    if (Location.innerRight(this)) {
 	      Sounds.paddle();
-	      this.setRightCenterSlope();
+	      this.setInnerRightSlope();
 	    }
-	    if (this.x >= this.paddle.position.x + 125 && this.x <= this.paddle.position.x + 150 + this.radius) {
+	    if (Location.outterRight(this)) {
 	      Sounds.paddle();
-	      this.setRightSlope();
+	      this.setOutterRightSlope();
 	    }
 	  },
 
 	  collisionDetectionBricks: function collisionDetectionBricks() {
-	    var self = this;
-	    var brickHeight = self.bricks[0].size.y;
-	    var brickWidth = self.bricks[0].size.x;
+	    var brickHeight = this.bricks[0].size.y;
+	    var brickWidth = this.bricks[0].size.x;
 
-	    for (var i = 0; i < self.bricks.length; i++) {
-	      if (self.x > self.bricks[i].position.x && self.x < self.bricks[i].position.x + brickWidth && self.y - self.radius < self.bricks[i].position.y + brickHeight && self.y + self.radius > self.bricks[i].position.y - brickHeight) {
+	    for (var i = 0; i < this.bricks.length; i++) {
+	      if (this.x > this.bricks[i].position.x && this.x < this.bricks[i].position.x + brickWidth && this.y - this.radius < this.bricks[i].position.y + brickHeight && this.y + this.radius > this.bricks[i].position.y - brickHeight) {
 	        Sounds.brick();
 	        this.dy = -this.dy;
-	        self.bricks[i].status = 0;
-	        self.bricks.splice(i, 1);
+	        this.bricks[i].status = 0;
+	        this.bricks.splice(i, 1);
 
-	        if (self.bricks.length === 0) {
-	          self.game.score += 10;
+	        if (this.bricks.length === 0) {
+	          this.game.score += 10;
 	          this.game.winGame();
 	        } else {
-	          self.game.score += 10;
+	          this.game.score += 10;
 	          return this.dy;
 	        }
 	      }
@@ -341,22 +310,50 @@
 	  },
 
 	  collisionDetectionWalls: function collisionDetectionWalls() {
-	    var self = this;
-
-	    if (self.x + self.dx > self.gameSize.x - self.radius || self.x + self.dx < self.radius) {
+	    if (Location.sideWalls(this)) {
 	      Sounds.wall();
-	      self.dx = -self.dx;
+	      this.dx = -this.dx;
 	    }
 
-	    if (self.y - self.canvasHeightOffset + self.dy < self.radius) {
+	    if (Location.topWall(this)) {
 	      Sounds.top();
-	      self.dy = -self.dy;
+	      this.dy = -this.dy;
 	    }
 
-	    if (self.y > 520) {
-	      self.game.status = false;
-	      self.game.updateGame();
+	    if (Location.bottomWall(this)) {
+	      this.game.status = false;
+	      this.game.updateGame();
 	    }
+	  },
+
+	  setOutterLeftSlope: function setOutterLeftSlope() {
+	    this.dx = -13;
+	    this.dy = -8;
+	  },
+
+	  setInnerLeftSlope: function setInnerLeftSlope() {
+	    this.dx = -11;
+	    this.dy = -9;
+	  },
+
+	  setCenterLeftSlope: function setCenterLeftSlope() {
+	    this.dx = -10;
+	    this.dy = -10;
+	  },
+
+	  setCenterRightSlope: function setCenterRightSlope() {
+	    this.dx = 10;
+	    this.dy = -10;
+	  },
+
+	  setInnerRightSlope: function setInnerRightSlope() {
+	    this.dx = 11;
+	    this.dy = -9;
+	  },
+
+	  setOutterRightSlope: function setOutterRightSlope() {
+	    this.dx = 13;
+	    this.dy = -8;
 	  }
 	};
 
@@ -369,16 +366,14 @@
 	'use strict';
 
 	var Canvas = function Canvas() {
-	    if (document.getElementById('canvas')) {
-	        var canvas = document.getElementById('canvas').getContext('2d');
-	        return canvas;
-	    } else {
-	        var context = document.createElement('canvas');
-	        context.width = 782;
-	        context.height = 520;
-	        var canvas = context.getContext('2d');
-	        return canvas;
-	    }
+	  if (document.getElementById('canvas')) {
+	    return document.getElementById('canvas').getContext('2d');
+	  } else {
+	    var context = document.createElement('canvas');
+	    context.width = 782;
+	    context.height = 520;
+	    return context.getContext('2d');
+	  }
 	};
 
 	module.exports = Canvas;
@@ -445,6 +440,87 @@
 /* 6 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	module.exports = {
+
+	  outterLeft: function outterLeft(ball) {
+	    if (ball.x >= ball.paddle.position.x - ball.radius && ball.x <= ball.paddle.position.x + 24) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  innerLeft: function innerLeft(ball) {
+	    if (ball.x >= ball.paddle.position.x + 25 && ball.x <= ball.paddle.position.x + 49) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  centerLeft: function centerLeft(ball) {
+	    if (ball.x >= ball.paddle.position.x + 50 && ball.x <= ball.paddle.position.x + 74) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  centerRight: function centerRight(ball) {
+	    if (ball.x >= ball.paddle.position.x + 75 && ball.x <= ball.paddle.position.x + 99) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  innerRight: function innerRight(ball) {
+	    if (ball.x >= ball.paddle.position.x + 100 && ball.x <= ball.paddle.position.x + 124) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  outterRight: function outterRight(ball) {
+	    if (ball.x >= ball.paddle.position.x + 125 && ball.x <= ball.paddle.position.x + 150 + ball.radius) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  sideWalls: function sideWalls(ball) {
+	    if (ball.x + ball.dx > ball.gameSize.x - ball.radius || ball.x + ball.dx < ball.radius) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  topWall: function topWall(ball) {
+	    if (ball.y - ball.canvasHeightOffset + ball.dy < ball.radius) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  },
+
+	  bottomWall: function bottomWall(ball) {
+	    if (ball.y > 520) {
+	      return true;
+	    } else {
+	      return false;
+	    }
+	  }
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
 	'use strict';
 
 	var Paddle = function Paddle(game) {
@@ -496,7 +572,7 @@
 	module.exports = Paddle;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -523,7 +599,7 @@
 	module.exports = Brick;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -539,14 +615,14 @@
 	      colorWheel.push("#10AC24");
 	      colorWheel.push("#6667FF");
 	    }
-	  };
+	  }
 	  return colorWheel;
 	};
 
 	module.exports = Colors;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
