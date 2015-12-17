@@ -7,6 +7,7 @@ describe('styles', function () {
 
   it('should be a module', function () {
     let styles = Styles
+    assert.ok(styles)
   });
 
   it('sets the style', function(){
@@ -23,5 +24,6 @@ describe('styles', function () {
   it('should return a message', function () {
     let styles = Styles.showText("#won-title", "Hi Steve!", 0, 150);
     let id = Styles.getId("won-title");
+    assert.ok(id)
   });
 });
