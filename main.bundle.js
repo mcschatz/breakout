@@ -201,6 +201,7 @@
 	  loseGame: function loseGame() {
 	    this.bodies[0].dy = 0;
 	    Sounds.stopTheme();
+	    Sounds.stopWall();
 	    Styles.displayStyles('losing', 'inline');
 	    Sounds.death();
 	    Styles.showText("#lose-title", "Sorry, you died!", 0, 150);
@@ -412,6 +413,12 @@
 	    var themeSound = document.getElementById("theme-sound");
 	    themeSound.load();
 	    themeSound.pause();
+	  },
+
+	  stopWall: function stopWall() {
+	    var wallSound = document.getElementById("wall-sound");
+	    wallSound.load();
+	    wallSound.pause();
 	  }
 	};
 
