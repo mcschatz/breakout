@@ -8,3 +8,4 @@ require('./sounds-test.js');
 require('./styles-test.js');
 require('./brick-test.js');
 require('./game-test.js');
+require('./location-test.js');
