@@ -58,7 +58,7 @@
 
 	var Game = __webpack_require__(2);
 	var Styles = __webpack_require__(10);
-	var Sounds = __webpack_require__(5);
+	var Sounds = __webpack_require__(4);
 
 	var Start = function Start() {
 	  Sounds.theme();
@@ -79,12 +79,12 @@
 	'use strict';
 
 	var Ball = __webpack_require__(3);
-	var Paddle = __webpack_require__(7);
-	var Brick = __webpack_require__(8);
-	var Colors = __webpack_require__(9);
-	var Canvas = __webpack_require__(4);
+	var Paddle = __webpack_require__(6);
+	var Brick = __webpack_require__(7);
+	var Colors = __webpack_require__(8);
+	var Canvas = __webpack_require__(9);
 	var Styles = __webpack_require__(10);
-	var Sounds = __webpack_require__(5);
+	var Sounds = __webpack_require__(4);
 
 	var Game = function Game() {
 	  var canvas = new Canvas();
@@ -219,17 +219,15 @@
 
 	'use strict';
 
-	var Canvas = __webpack_require__(4);
-	var Sounds = __webpack_require__(5);
-	var Location = __webpack_require__(6);
+	var Sounds = __webpack_require__(4);
+	var Location = __webpack_require__(5);
 
 	var Ball = function Ball(game, paddle, bricks) {
-	  var canvas = new Canvas().canvas;
 	  this.game = game;
 	  this.paddle = paddle;
 	  this.startAngle = 0;
-	  this.x = canvas.width / 2;
-	  this.y = canvas.height - 25;
+	  this.x = game.size.x / 2;
+	  this.y = game.size.y - 25;
 	  this.canvasHeightOffset = 8;
 	  this.radius = 10;
 	  this.gameSize = { x: this.game.size.x, y: this.game.size.y };
@@ -363,25 +361,6 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	'use strict';
-
-	var Canvas = function Canvas() {
-	  if (document.getElementById('canvas')) {
-	    return document.getElementById('canvas').getContext('2d');
-	  } else {
-	    var context = document.createElement('canvas');
-	    context.width = 782;
-	    context.height = 520;
-	    return context.getContext('2d');
-	  }
-	};
-
-	module.exports = Canvas;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
 	"use strict";
 
 	module.exports = {
@@ -437,7 +416,7 @@
 	};
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -518,7 +497,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -572,7 +551,7 @@
 	module.exports = Paddle;
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -599,7 +578,7 @@
 	module.exports = Brick;
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -620,6 +599,25 @@
 	};
 
 	module.exports = Colors;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var Canvas = function Canvas() {
+	  if (document.getElementById('canvas')) {
+	    return document.getElementById('canvas').getContext('2d');
+	  } else {
+	    var context = document.createElement('canvas');
+	    context.width = 782;
+	    context.height = 520;
+	    return context.getContext('2d');
+	  }
+	};
+
+	module.exports = Canvas;
 
 /***/ },
 /* 10 */
