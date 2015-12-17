@@ -26,6 +26,26 @@ body {
   display: block;
 }
 
+#game-start {
+  display: none;
+  width: 782px;
+  height: 520px;
+  z-index: 1;
+  margin: auto;
+  position: absolute;
+  top: 20px; left: 0; bottom: 0; right: 0;
+  background-color: blue;
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Press Start 2P', cursive;
+  background-color:black;
+  color: #585858;
+}
+
 #winning {
   display: none;
   width: 782px;
@@ -116,6 +136,12 @@ body {
   color: white;
 }
 
+#start-continue {
+  font-size: 20px;
+  margin-top: 50px;
+  color: white;
+}
+
 h1{
   -webkit-animation: color-change 2s infinite;
   -moz-animation: color-change 2s infinite;
@@ -164,4 +190,3 @@ h1{
       80% { color: #10AC24; }
       100% { color: #6667FF; }
   }
-
