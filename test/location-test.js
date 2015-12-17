@@ -66,4 +66,55 @@ describe('location', function () {
     this.ball.y = 530;
     assert.equal(Location.bottomWall(this.ball), true);
   });
+
+   it('should return false if it does not hit the outterLeft of the paddle', function () {
+    this.ball.x = 100;
+    this.paddle.position.x = 40;
+    assert.equal(Location.outterLeft(this.ball), false);
+  });
+
+  it('should return false if it does not hit the innerLeft of the paddle', function () {
+    this.ball.x = 10;
+    this.paddle.position.x = 75;
+    assert.equal(Location.innerLeft(this.ball), false);
+  });
+
+  it('should return false if it does not hit the centerLeft of the paddle', function () {
+    this.ball.x = 15;
+    this.paddle.position.x = 90;
+    assert.equal(Location.centerLeft(this.ball), false);
+  });
+
+  it('should return false if it does not hit the centerRight of the paddle', function () {
+    this.ball.x = 25;
+    this.paddle.position.x = 40;
+    assert.equal(Location.centerRight(this.ball), false);
+  });
+
+  it('should return false if it does not hit the innerRight of the paddle', function () {
+    this.ball.x = 80;
+    this.paddle.position.x = 40;
+    assert.equal(Location.innerRight(this.ball), false);
+  });
+
+  it('should return false if it does not hit the outterRight of the paddle', function () {
+    this.ball.x = 75;
+    this.paddle.position.x = 40;
+    assert.equal(Location.outterRight(this.ball), false);
+  });
+
+  it('should return false if it does not hit the sideWalls', function () {
+    this.ball.x = 300;
+    assert.equal(Location.sideWalls(this.ball), false);
+  });
+
+  it('should return false if it does not hit the topWall', function () {
+    this.ball.y = 40;
+    assert.equal(Location.topWall(this.ball), false);
+  });
+
+  it('should return false if it does not hit the bottomWall', function () {
+    this.ball.y = 500;
+    assert.equal(Location.bottomWall(this.ball), false);
+  });
 });
