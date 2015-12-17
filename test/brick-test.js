@@ -1,12 +1,12 @@
 const chai = require('chai');
 const assert = chai.assert;
 
-const Brick = require('../lib/brick')
+const Brick = require('../lib/brick');
 const Game = require('../lib/game');
 
 
 describe('bricks', function () {
-  var canvas = document.createElement('canvas')
+  var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
 
   beforeEach(function() {
