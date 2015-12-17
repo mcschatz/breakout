@@ -49,4 +49,43 @@ describe('balls', function () {
     assert.equal(ball.gameSize.x, 782);
     assert.equal(ball.gameSize.y, 520);
   });
+
+  it('should update a ball direction based on where it hits the paddle', function(){
+    let ball = new Ball(this.game, this.paddle, this.brick);
+    assert.equal(ball.dx, -10);
+    assert.equal(ball.dy, 10);
+
+    ball.setLeftSlope();
+    assert.equal(ball.dx, -13);
+    assert.equal(ball.dy, -8);
+
+    ball.setLeftCenterSlope();
+    assert.equal(ball.dx, -11);
+    assert.equal(ball.dy, -9);
+
+    ball.setLeftCenterCenterSlope();
+    assert.equal(ball.dx, -10);
+    assert.equal(ball.dy, -10);
+
+    ball.setRightCenterCenterSlope();
+    assert.equal(ball.dx, 10);
+    assert.equal(ball.dy, -10);
+
+    ball.setRightCenterSlope();
+    assert.equal(ball.dx, 11);
+    assert.equal(ball.dy, -9);
+
+    ball.setRightSlope();
+    assert.equal(ball.dx, 13);
+    assert.equal(ball.dy, -8);
+  });
 });
+
+
+
+
+
+
+
+
+
