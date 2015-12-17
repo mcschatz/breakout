@@ -1,10 +1,7 @@
 const chai = require('chai');
 const assert = chai.assert;
 
-const Game = require('../lib/game.js');
 const Styles = require('../lib/styles.js');
-const Paddle = require('../lib/paddle.js');
-
 
 describe('styles', function () {
 
