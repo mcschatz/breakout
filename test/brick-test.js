@@ -1,12 +1,11 @@
 const chai = require('chai');
 const assert = chai.assert;
 
-const Brick = require('../lib/brick')
+const Brick = require('../lib/brick');
 const Game = require('../lib/game');
 
-
 describe('bricks', function () {
-  var canvas = document.createElement('canvas')
+  var canvas = document.createElement('canvas');
   var ctx = canvas.getContext('2d');
 
   beforeEach(function() {
@@ -43,7 +42,7 @@ describe('bricks', function () {
     assert.ok(brick.draw);
   });
 
-  it('should have draw method', function () {
+  it('should draw method', function () {
     let brick = new Brick(this.game, {x: 100, y: 50} );
     assert.equal(brick.draw(ctx, "#000000"), undefined);
   });
