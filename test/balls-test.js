@@ -44,31 +44,39 @@ describe('balls', function () {
     assert.equal(this.ball.gameSize.y, 520);
   });
 
+  it('should have a canvasHeightOffset', function(){
+    assert.equal(this.ball.canvasHeightOffset, 8);
+  });
+
+  it('should have a bricks', function () {
+   assert.instanceOf(this.ball.bricks, Brick);
+  });
+
   it('should update a ball direction based on where it hits the paddle', function(){
     assert.equal(this.ball.dx, -10);
     assert.equal(this.ball.dy, 10);
 
-    this.ball.setLeftSlope();
+    this.ball.setOutterLeftSlope();
     assert.equal(this.ball.dx, -13);
     assert.equal(this.ball.dy, -8);
 
-    this.ball.setLeftCenterSlope();
+    this.ball.setInnerLeftSlope();
     assert.equal(this.ball.dx, -11);
     assert.equal(this.ball.dy, -9);
 
-    this.ball.setLeftCenterCenterSlope();
+    this.ball.setCenterLeftSlope();
     assert.equal(this.ball.dx, -10);
     assert.equal(this.ball.dy, -10);
 
-    this.ball.setRightCenterCenterSlope();
+    this.ball.setCenterRightSlope();
     assert.equal(this.ball.dx, 10);
     assert.equal(this.ball.dy, -10);
 
-    this.ball.setRightCenterSlope();
+    this.ball.setInnerRightSlope();
     assert.equal(this.ball.dx, 11);
     assert.equal(this.ball.dy, -9);
 
-    this.ball.setRightSlope();
+    this.ball.setOutterRightSlope();
     assert.equal(this.ball.dx, 13);
     assert.equal(this.ball.dy, -8);
   });
