@@ -5,27 +5,35 @@ const Sounds = require('../lib/sounds.js');
 
 describe('sounds', function () {
 
-  // it('should instaniate a new sound class', function () {
-  //   let sounds = new Sounds();
-  //   assert.isObject(sounds);
-  // });
+  it('should have a paddle sound', function () {
+    assert.ok(Sounds.paddle);
+  });
 
-  // it('should have a paddle sound', function () {
-  //   assert.ok(Sounds.paddle());
-  // });
+  it('should have a wall sound', function () {
+    assert.ok(Sounds.wall);
+  });
 
-  // it('should have a top sound', function () {
-  //   let sounds = new Sounds();
-  //   assert(sounds.topSound, '<audio id="top-sound" src="./sounds/top.mp3"></audio>');
-  // });
+  it('should have a top sound', function () {
+    assert.ok(Sounds.top);
+  });
 
-  // it('should have a wall sound', function () {
-  //   let sounds = new Sounds();
-  //   assert(sounds.wallSound, '<audio id="wall-sound" src="./sounds/wall.mp3"></audio>');
-  // });
+  it('should have a death sound', function () {
+    assert.ok(Sounds.death);
+  });
 
-  // it('should have a death sound', function () {
-  //   let sounds = new Sounds();
-  //   assert(sounds.deathSound, '<audio id="death-sound" src="./sounds/death.wav"></audio>');
-  // });
+  it('should have a brick sound', function () {
+    assert.ok(Sounds.brick);
+  });
+
+  it('should have a win sound', function () {
+    assert.ok(Sounds.win);
+  });
+
+  it('should have a theme sound', function () {
+    assert.ok(Sounds.theme);
+  });
+
+  it('should have a stopTheme sound', function () {
+    assert.ok(Sounds.stopTheme);
+  });
 });
