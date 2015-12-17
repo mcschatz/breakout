@@ -72,7 +72,7 @@ describe('game', function () {
 
   it('should move the ball in the bodies array', function () {
     let game = new Game();
-    game.status = false
+    game.status = false;
     game.move();
     assert.equal(game.bodies[0].x, 401);
   });
