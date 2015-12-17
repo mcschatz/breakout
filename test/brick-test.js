@@ -6,6 +6,8 @@ const Game = require('../lib/game');
 
 
 describe('bricks', function () {
+  var canvas = document.createElement('canvas')
+  var ctx = canvas.getContext('2d');
 
   beforeEach(function() {
     this.game = new Game();
@@ -39,5 +41,10 @@ describe('bricks', function () {
   it('should have draw method', function () {
     let brick = new Brick(this.game, {x: 100, y: 50} );
     assert.ok(brick.draw);
+  });
+
+  it('should have draw method', function () {
+    let brick = new Brick(this.game, {x: 100, y: 50} );
+    assert.equal(brick.draw(ctx, "#000000"), undefined);
   });
 });
