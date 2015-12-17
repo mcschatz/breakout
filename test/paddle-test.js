@@ -57,11 +57,6 @@ describe('paddle', function () {
     assert.ok(paddle.draw);
   });
 
-  it('should draw', function () {
-    let paddle = new Paddle(this.game);
-    assert.equal(paddle.draw(ctx, "#000000"), undefined);
-  });
-
   it('should have move method', function () {
     let paddle = new Paddle(this.game);
     assert.ok(paddle.move);

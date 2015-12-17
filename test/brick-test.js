@@ -41,9 +41,4 @@ describe('bricks', function () {
     let brick = new Brick(this.game, {x: 100, y: 50} );
     assert.ok(brick.draw);
   });
-
-  it('should draw method', function () {
-    let brick = new Brick(this.game, {x: 100, y: 50} );
-    assert.equal(brick.draw(ctx, "#000000"), undefined);
-  });
 });
