@@ -2,7 +2,16 @@ body {
   background-color: #000;
 }
 
-/*Canvas Styling*/
+#title {
+  margin-top: 10px;
+  font-family: 'Josefin Slab', serif;
+  font-size: 60px;
+  text-align: center;
+  color:#fff5e5;
+  text-transform: uppercase;
+  font-weight: 200;
+  letter-spacing: 2px;
+}
 
 #canvas {
   border:20px solid #ABABAB;
@@ -16,8 +25,6 @@ body {
   margin-right: auto;
   display: block;
 }
-
-/*Opening Page Styling*/
 
 #game-start {
   display: none;
@@ -39,15 +46,7 @@ body {
   color: #585858;
 }
 
-#start-continue {
-  font-size: 20px;
-  margin-top: 50px;
-  color: white;
-}
-
-/*Initial Game Start Delay*/
-
-#click-start {
+#winning {
   display: none;
   width: 782px;
   height: 520px;
@@ -67,30 +66,7 @@ body {
   color: #585858;
 }
 
-#delay-title {
-  font-size: 80px;
-  margin-top: 200px;
-  color: white;
-}
-
-#instructions {
-  position:fixed;
-  font-size: 20px;
-  left:0px;
-  bottom:125px;
-  height:20px;
-  width:100%;
-}
-
-#go {
-  display: none;
-  font-size: 20px;
-  text-align: center;
-}
-
-/*Win Game Styles*/
-
-#winning {
+#losing {
   display: none;
   width: 782px;
   height: 520px;
@@ -116,43 +92,11 @@ body {
   color: white;
 }
 
-#restart-win {
-  margin-top: 85px;
-}
-
-/*Lose Game Styles*/
-
-#losing {
-  display: none;
-  width: 782px;
-  height: 520px;
-  z-index: 1;
-  margin: auto;
-  position: absolute;
-  top: 20px; left: 0; bottom: 0; right: 0;
-  background-color: blue;
-  text-align: center;
-  padding-left: 0;
-  padding-right: 0;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: 'Press Start 2P', cursive;
-  background-color:black;
-  color: #585858;
-}
-
 #lose-title {
   font-size: 30px;
   margin-top: 50px;
   color: white;
 }
-
-#restart-lose {
-  margin-top: 85px;
-}
-
-/* Resetting the Ball Styles*/
 
 #ball-reset {
   width: 782px;
@@ -178,7 +122,13 @@ body {
   text-align: center;
 }
 
-/*Starting a New Game Styles*/
+#restart {
+  margin-top: 85px;
+}
+
+#restart-lose {
+  margin-top: 85px;
+}
 
 #continue {
   font-size: 20px;
@@ -186,7 +136,11 @@ body {
   color: white;
 }
 
-/*Color Rotations for Title*/
+#start-continue {
+  font-size: 20px;
+  margin-top: 50px;
+  color: white;
+}
 
 h1{
   -webkit-animation: color-change 2s infinite;
