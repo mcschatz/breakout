@@ -19,37 +19,37 @@ describe('location', function () {
   it('should recognize the outterLeft of the paddle', function () {
     this.ball.x = 50;
     this.paddle.position.x = 40;
-    assert.equal(Location.outterLeft(this.ball), true);
+    assert.equal(Location.change(this.ball, "outterLeft"), true);
   });
 
   it('should recognize the innerLeft of the paddle', function () {
     this.ball.x = 100;
     this.paddle.position.x = 75;
-    assert.equal(Location.innerLeft(this.ball), true);
+    assert.equal(Location.change(this.ball, "innerLeft"), true);
   });
 
   it('should recognize the centerLeft of the paddle', function () {
     this.ball.x = 150;
     this.paddle.position.x = 90;
-    assert.equal(Location.centerLeft(this.ball), true);
+    assert.equal(Location.change(this.ball, "centerLeft"), true);
   });
 
   it('should recognize the centerRight of the paddle', function () {
     this.ball.x = 130;
     this.paddle.position.x = 40;
-    assert.equal(Location.centerRight(this.ball), true);
+    assert.equal(Location.change(this.ball, "centerRight"), true);
   });
 
   it('should recognize the innerRight of the paddle', function () {
     this.ball.x = 150;
     this.paddle.position.x = 40;
-    assert.equal(Location.innerRight(this.ball), true);
+    assert.equal(Location.change(this.ball, "innerRight"), true);
   });
 
   it('should recognize the outterRight of the paddle', function () {
     this.ball.x = 180;
     this.paddle.position.x = 40;
-    assert.equal(Location.outterRight(this.ball), true);
+    assert.equal(Location.change(this.ball, "outterRight"), true);
   });
 
   it('should recognize the sideWalls', function () {
@@ -70,37 +70,37 @@ describe('location', function () {
    it('should return false if it does not hit the outterLeft of the paddle', function () {
     this.ball.x = 100;
     this.paddle.position.x = 40;
-    assert.equal(Location.outterLeft(this.ball), false);
+    assert.equal(Location.change(this.ball, "outterLeft"), false);
   });
 
   it('should return false if it does not hit the innerLeft of the paddle', function () {
     this.ball.x = 10;
     this.paddle.position.x = 75;
-    assert.equal(Location.innerLeft(this.ball), false);
+    assert.equal(Location.change(this.ball, "innerLeft"), false);
   });
 
   it('should return false if it does not hit the centerLeft of the paddle', function () {
     this.ball.x = 15;
     this.paddle.position.x = 90;
-    assert.equal(Location.centerLeft(this.ball), false);
+    assert.equal(Location.change(this.ball, "centerLeft"), false);
   });
 
   it('should return false if it does not hit the centerRight of the paddle', function () {
     this.ball.x = 25;
     this.paddle.position.x = 40;
-    assert.equal(Location.centerRight(this.ball), false);
+    assert.equal(Location.change(this.ball, "centerRight"), false);
   });
 
   it('should return false if it does not hit the innerRight of the paddle', function () {
     this.ball.x = 80;
     this.paddle.position.x = 40;
-    assert.equal(Location.innerRight(this.ball), false);
+    assert.equal(Location.change(this.ball, "innerRight"), false);
   });
 
   it('should return false if it does not hit the outterRight of the paddle', function () {
     this.ball.x = 75;
     this.paddle.position.x = 40;
-    assert.equal(Location.outterRight(this.ball), false);
+    assert.equal(Location.change(this.ball, "outterRight"), false);
   });
 
   it('should return false if it does not hit the sideWalls', function () {
